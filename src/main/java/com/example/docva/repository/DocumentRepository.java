@@ -21,3 +21,12 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     List<Document> searchByOwnerAndName(@Param("owner") String owner, @Param("name") String name);
 
 }
+
+//
+//Spring Data JPA (your repos)
+//       ↓
+//JPA (annotations, interfaces)
+//       ↓
+//Hibernate (implementation, SQL generator)
+//       ↓
+//Database (e.g., MySQL, Postgres, H2)
