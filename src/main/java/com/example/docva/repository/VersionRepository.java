@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DocumentVersionRepository extends JpaRepository<DocumentVersion, Long> {
-
-    List<DocumentVersion> findByDocumentId(Long documentId);
+public interface VersionRepository extends JpaRepository<DocumentVersion, Long> {
 
     Optional<DocumentVersion> findTopByDocumentIdOrderByVersionNoDesc(Long documentId); // latest version of a document
 
-    List<DocumentVersion> findByDocumentIdAndUploadedBy(Long documentId, String uploadedBy);
-
     List<DocumentVersion> findByDocumentIdOrderByUploadedAtDesc(Long documentId);
+
+    Optional<DocumentVersion> findByDocumentIdAndVersionNo(Long documentId, int versionNo);
 }

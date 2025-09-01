@@ -8,17 +8,19 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Integer> {
 
-    List<Document> findByNameContaining(String name);
+    Optional<Document> findByFileName(String name);
 
     List<Document> findByOwner(String owner);
+
     List<Document> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT d FROM Document d WHERE d.owner = :owner AND d.name LIKE %:name%")
-    List<Document> searchByOwnerAndName(@Param("owner") String owner, @Param("name") String name);
+    @Query("SELECT d FROM Document d WHERE d.owner = :owner AND d.fileName LIKE %:fileName%")
+    List<Document> searchByOwnerAndFileName(@Param("owner") String owner, @Param("fileName") String fileName);
 
 }
 

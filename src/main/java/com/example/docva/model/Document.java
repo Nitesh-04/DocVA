@@ -14,8 +14,9 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String fileName;
     private String owner;
+    private String filePath;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentVersion> versions = new ArrayList<>();
@@ -30,12 +31,12 @@ public class Document {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFileName(String name) {
+        this.fileName = fileName;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -52,6 +53,14 @@ public class Document {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public List<DocumentVersion> getVersions() {

@@ -1,5 +1,6 @@
 package com.example.docva.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -13,11 +14,20 @@ public class Audit {
     private Long id;
 
     private String username;
+
+    @Enumerated(EnumType.STRING)
     private LogType action;
+
     private LocalDateTime timestamp;
+
+    @PrePersist
+    protected void onCreate() {
+        this.timestamp = LocalDateTime.now();
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", referencedColumnName = "id")
+    @JsonIgnore                                                     // doesnt return full document in logs
     private Document document;
 
     public Long getId() {

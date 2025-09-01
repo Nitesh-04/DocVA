@@ -13,8 +13,6 @@ public class DocumentVersion {
     private Long id;
 
     private int versionNo;
-    private String filePath;
-    private String uploadedBy;
     private LocalDateTime uploadedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,22 +33,6 @@ public class DocumentVersion {
 
     public void setVersionNo(int versionNo) {
         this.versionNo = versionNo;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getUploadedBy() {
-        return uploadedBy;
-    }
-
-    public void setUploadedBy(String uploadedBy) {
-        this.uploadedBy = uploadedBy;
     }
 
     public LocalDateTime getUploadedAt() {
