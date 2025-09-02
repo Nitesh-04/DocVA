@@ -14,6 +14,7 @@ public class DocumentVersion {
 
     private int versionNo;
     private LocalDateTime uploadedAt;
+    private String versionLink;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", referencedColumnName = "id")
@@ -33,6 +34,14 @@ public class DocumentVersion {
 
     public void setVersionNo(int versionNo) {
         this.versionNo = versionNo;
+    }
+
+    public String getVersionLink() {
+        return versionLink;
+    }
+
+    public void setVersionLink(String versionLink) {
+        this.versionLink = versionLink;
     }
 
     public LocalDateTime getUploadedAt() {

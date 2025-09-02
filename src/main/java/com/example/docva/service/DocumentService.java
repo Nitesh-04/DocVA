@@ -31,7 +31,6 @@ public class DocumentService {
                     Document newDocument = new Document();
                     newDocument.setFileName(fileName);
                     newDocument.setOwner(owner);
-                    newDocument.setFilePath("/filepath/logic");
                     return documentRepository.save(newDocument);
                 });
 
@@ -41,6 +40,10 @@ public class DocumentService {
 
         DocumentVersion documentVersion = new DocumentVersion();
         documentVersion.setVersionNo(latestVersion+1);
+        documentVersion.setVersionLink("filepath/logic");
+
+        document.setFileLink(documentVersion.getVersionLink()); // set latest version link to document
+
         documentVersion.setDocument(document);
 
         versionRepository.save(documentVersion);

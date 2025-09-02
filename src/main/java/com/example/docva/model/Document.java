@@ -16,7 +16,7 @@ public class Document {
 
     private String fileName;
     private String owner;
-    private String filePath;
+    private String fileLink;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentVersion> versions = new ArrayList<>();
@@ -55,12 +55,12 @@ public class Document {
         this.owner = owner;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getFileLink() {
+        return fileLink;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setFileLink(String fileLink) {
+        this.fileLink = fileLink;
     }
 
     public List<DocumentVersion> getVersions() {
