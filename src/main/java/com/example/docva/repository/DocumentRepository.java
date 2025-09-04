@@ -22,6 +22,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Query("SELECT d FROM Document d WHERE d.owner = :owner AND d.fileName LIKE %:fileName%")
     List<Document> searchByOwnerAndFileName(@Param("owner") String owner, @Param("fileName") String fileName);
 
+    Document findById(Long id);
 }
 
 //

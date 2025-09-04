@@ -24,7 +24,7 @@ public class DocumentService {
     }
 
     @Transactional
-    public Document uploadDocument(String fileName, String owner) {
+    public Document uploadDocument(String fileName, String fileLink, String owner) {
 
         Document document = documentRepository.findByFileName(fileName)
                 .orElseGet(() -> {
@@ -40,7 +40,7 @@ public class DocumentService {
 
         DocumentVersion documentVersion = new DocumentVersion();
         documentVersion.setVersionNo(latestVersion+1);
-        documentVersion.setVersionLink("filepath/logic");
+        documentVersion.setVersionLink(fileLink);
 
         document.setFileLink(documentVersion.getVersionLink()); // set latest version link to document
 
@@ -51,17 +51,6 @@ public class DocumentService {
         auditService.createAudit(owner,LogType.UPLOAD,document);
 
         return document;
-    }
-
-    @Transactional
-    public Document getDocumentByFileName(String username, String fileName){
-        Document doc = documentRepository.findByFileName(fileName)
-                .orElse(null);
-        if(doc != null){
-            auditService.createAudit(username, LogType.VIEW, doc);
-        }
-
-        return doc;
     }
 
     @Transactional
@@ -91,5 +80,15 @@ public class DocumentService {
         }
 
         return docs;
+    }
+
+    @Transactional
+    public Document deleteDocumentByDocumentId(String owner, Long documentId) {
+        Document deleteDoc =  documentRepository.findById(documentId);
+        documentRepository.delete(deleteDoc);
+
+        auditService.createAudit(owner, LogType.DELETE_DOCUMENT, deleteDoc);
+
+        return deleteDoc;
     }
 }

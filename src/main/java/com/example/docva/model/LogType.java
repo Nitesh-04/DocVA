@@ -4,6 +4,6 @@ public enum LogType {
     VIEW,
     DOWNLOAD,
     UPLOAD,
-    DELETEVERSION,
-    DELETDOC
+    DELETE_VERSION,
+    DELETE_DOCUMENT,
 }
