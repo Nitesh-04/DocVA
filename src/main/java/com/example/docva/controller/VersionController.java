@@ -1,6 +1,7 @@
 package com.example.docva.controller;
 
-import com.example.docva.model.DocumentVersion;
+import com.example.docva.dto.VersionDTO;
+import com.example.docva.model.Version;
 import com.example.docva.service.VersionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +22,21 @@ public class VersionController {
     private final String username = "user1";
 
     @GetMapping("/all")
-    public List<DocumentVersion> getAllVersions(
+    public List<VersionDTO> getAllVersions(
             @RequestParam("documentId") Long documentId) {
         return versionService.getAllVersionsByDocumentId(documentId);
     }
 
     @GetMapping("/latest")
-    public Optional<DocumentVersion> getLatestVersion(
+    public Optional<VersionDTO> getLatestVersion(
             @RequestParam("documentId") Long documentId) {
         return versionService.getLatestVersionByDocumentId(documentId);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteVersion(@RequestParam("versionNo") int versionNo, @RequestParam("documentId") Long documentId) {
+    @DeleteMapping("/{documentId}/{versionNo}")
+    public ResponseEntity<String> deleteVersion(@PathVariable int versionNo, @PathVariable Long documentId) {
 
-        Optional<DocumentVersion> version = versionService.deleteVersion(username, versionNo, documentId);
+        Optional<Version> version = versionService.deleteVersion(username, versionNo, documentId);
 
         if(version.isPresent()) {
             return  new ResponseEntity<>("Version deleted", HttpStatus.OK);

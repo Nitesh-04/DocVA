@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "document")
-public class Document {
+public class  Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Document {
     private String fileLink;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DocumentVersion> versions = new ArrayList<>();
+    private List<Version> versions = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
@@ -63,11 +63,11 @@ public class Document {
         this.fileLink = fileLink;
     }
 
-    public List<DocumentVersion> getVersions() {
+    public List<Version> getVersions() {
         return versions;
     }
 
-    public void setVersions(List<DocumentVersion> versions) {
+    public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.docva.service;
 
+import com.example.docva.dto.DocumentDTO;
+import com.example.docva.dto.VersionDTO;
 import com.example.docva.model.Document;
-import com.example.docva.model.DocumentVersion;
+import com.example.docva.model.Version;
 import com.example.docva.model.LogType;
 import com.example.docva.repository.DocumentRepository;
 import com.example.docva.repository.VersionRepository;
@@ -23,8 +25,34 @@ public class DocumentService {
         this.auditService = auditService;
     }
 
+    public static DocumentDTO toDTO(Document document) {
+        List<VersionDTO> versionDTOs = document.getVersions().stream()
+                .map(v -> new VersionDTO(
+                        v.getId(),
+                        v.getVersionNo(),
+                        v.getVersionLink(),
+                        v.getUploadedAt(),
+                        document.getId()
+                ))
+                .toList();
+
+        return new DocumentDTO(
+                document.getId(),
+                document.getFileName(),
+                document.getOwner(),
+                document.getFileLink(),
+                document.getCreatedAt(),
+                versionDTOs
+        );
+    }
+
+
+    public static List<DocumentDTO> toDtoList(List<Document> docs) {
+        return docs.stream().map(DocumentService::toDTO).toList();
+    }
+
     @Transactional
-    public Document uploadDocument(String fileName, String fileLink, String owner) {
+    public DocumentDTO uploadDocument(String fileName, String fileLink, String owner) {
 
         Document document = documentRepository.findByFileName(fileName)
                 .orElseGet(() -> {
@@ -35,51 +63,51 @@ public class DocumentService {
                 });
 
         int latestVersion = versionRepository.findTopByDocumentIdOrderByVersionNoDesc(document.getId())
-                .map(DocumentVersion::getVersionNo)
+                .map(Version::getVersionNo)
                 .orElse(0);
 
-        DocumentVersion documentVersion = new DocumentVersion();
-        documentVersion.setVersionNo(latestVersion+1);
-        documentVersion.setVersionLink(fileLink);
+        Version version = new Version();
+        version.setVersionNo(latestVersion+1);
+        version.setVersionLink(fileLink);
 
-        document.setFileLink(documentVersion.getVersionLink()); // set latest version link to document
+        document.setFileLink(version.getVersionLink()); // set latest version link to document
 
-        documentVersion.setDocument(document);
+        version.setDocument(document);
 
-        versionRepository.save(documentVersion);
+        versionRepository.save(version);
 
         auditService.createAudit(owner,LogType.UPLOAD,document);
 
-        return document;
+        return toDTO(document);
     }
 
     @Transactional
-    public List<Document> getDocumentsByOwner(String owner){
+    public List<DocumentDTO> getDocumentsByOwner(String owner){
         List<Document> docs = documentRepository.findByOwner(owner);
         for(Document document : docs){
             auditService.createAudit(owner,LogType.VIEW,document);
         }
 
-        return docs;
+        return toDtoList(docs);
     }
 
     @Transactional
-    public List<Document> getDocumentsCreatedBetween(String username, LocalDateTime startTime, LocalDateTime endTime){
+    public List<DocumentDTO> getDocumentsCreatedBetween(String username, LocalDateTime startTime, LocalDateTime endTime){
         List<Document> docs = documentRepository.findByCreatedAtBetween(startTime, endTime);
         for(Document document : docs){
             auditService.createAudit(username,LogType.VIEW,document);
         }
-        return docs;
+        return toDtoList(docs);
     }
 
     @Transactional
-    public List<Document> getDocumentsByOwnerAndFileName(String owner, String fileName){
+    public List<DocumentDTO> getDocumentsByOwnerAndFileName(String owner, String fileName){
         List<Document> docs = documentRepository.searchByOwnerAndFileName(owner, fileName);
         for(Document document : docs){
             auditService.createAudit(owner,LogType.VIEW,document);
         }
 
-        return docs;
+        return toDtoList(docs);
     }
 
     @Transactional
@@ -92,3 +120,4 @@ public class DocumentService {
         return deleteDoc;
     }
 }
+

@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "document_version")
-public class DocumentVersion {
+@Table(name = "version")
+public class Version {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

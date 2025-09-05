@@ -1,7 +1,8 @@
 package com.example.docva.service;
 
+import com.example.docva.dto.VersionDTO;
 import com.example.docva.model.Document;
-import com.example.docva.model.DocumentVersion;
+import com.example.docva.model.Version;
 import com.example.docva.model.LogType;
 import com.example.docva.repository.DocumentRepository;
 import com.example.docva.repository.VersionRepository;
@@ -23,17 +24,33 @@ public class VersionService {
         this.auditService = auditService;
     }
 
-    public List<DocumentVersion> getAllVersionsByDocumentId(Long documentId) {
-        return versionRepository.findByDocumentIdOrderByUploadedAtDesc(documentId);
+    public static VersionDTO toDTO(Version version) {
+        return new VersionDTO(
+                version.getId(),
+                version.getVersionNo(),
+                version.getVersionLink(),
+                version.getUploadedAt(),
+                version.getDocument() != null ? version.getDocument().getId() : null
+        );
     }
 
-    public Optional<DocumentVersion> getLatestVersionByDocumentId(Long documentId) {
-        return versionRepository.findTopByDocumentIdOrderByVersionNoDesc(documentId);
+    public static List<VersionDTO> toDTOList(List<Version> versions) {
+        return versions.stream().map(VersionService::toDTO).toList();
+    }
+
+
+    public List<VersionDTO> getAllVersionsByDocumentId(Long documentId) {
+        return toDTOList(versionRepository.findByDocumentIdOrderByUploadedAtDesc(documentId));
+    }
+
+    public Optional<VersionDTO> getLatestVersionByDocumentId(Long documentId) {
+        return versionRepository.findTopByDocumentIdOrderByVersionNoDesc(documentId)
+                .map(VersionService::toDTO);
     }
 
     @Transactional
-    public Optional<DocumentVersion> deleteVersion(String username, int versionNo, Long documentId) {
-        DocumentVersion delVersion = versionRepository.findByDocumentIdAndVersionNo(documentId,versionNo)
+    public Optional<Version> deleteVersion(String username, int versionNo, Long documentId) {
+        Version delVersion = versionRepository.findByDocumentIdAndVersionNo(documentId,versionNo)
                 .orElse(null);
         Document document = documentRepository.findById(documentId);
 

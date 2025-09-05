@@ -1,6 +1,6 @@
 package com.example.docva.controller;
 
-import com.example.docva.model.Audit;
+import com.example.docva.dto.AuditDTO;
 import com.example.docva.model.LogType;
 import com.example.docva.service.AuditService;
 import org.springframework.data.domain.Page;
@@ -18,14 +18,14 @@ public class AuditController {
     private final String username = "user1";
 
     @GetMapping("/all")
-    public Page<Audit> getAllLogs(
+    public Page<AuditDTO> getAllLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return auditService.getUserLogs(page, size,username);
     }
 
     @GetMapping("/action/{action}")
-    public Page<Audit> getLogsByAction(
+    public Page<AuditDTO> getLogsByAction(
             @PathVariable LogType action,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -33,7 +33,7 @@ public class AuditController {
     }
 
     @GetMapping("/document/{documentId}")
-    public Page<Audit> getLogsByAction(
+    public Page<AuditDTO> getLogsByAction(
             @PathVariable Long documentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -41,7 +41,7 @@ public class AuditController {
     }
 
     @GetMapping("/user/document/{documentId}")
-    public Page<Audit> getLogsUserOnDocument(
+    public Page<AuditDTO> getLogsUserOnDocument(
             @PathVariable Long documentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -49,7 +49,7 @@ public class AuditController {
     }
 
     @GetMapping("/document/action/{action}")
-    public Page<Audit> getLogsByActionOnDocument(
+    public Page<AuditDTO> getLogsByActionOnDocument(
             @PathVariable LogType action,
             @RequestParam("documentId") Long documentId,
             @RequestParam(defaultValue = "0") int page,
