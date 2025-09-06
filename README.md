@@ -1,4 +1,4 @@
-# 📄 DocVA – Document Versioning & Audit System
+# DocVA – Document Versioning & Audit System
 
 DocVA is a Spring Boot application for managing documents with version control and auditing.  
 It allows users to:
@@ -27,5 +27,3 @@ It allows users to:
 - Maven
 
 ---
-
-## 📂 Project Structure
