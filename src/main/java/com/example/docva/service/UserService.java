@@ -4,9 +4,11 @@ import com.example.docva.dto.UserDTO;
 import com.example.docva.model.User;
 import com.example.docva.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserService {
 
     private final UserRepository userRepository;

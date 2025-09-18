@@ -32,15 +32,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String,Object>> register(@RequestBody User user) {
-        UserDTO registeredUser = userService.registerUser(user);
-
+    public ResponseEntity<Map<String, Object>> register(@RequestBody User user) {
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "User registered successfully");
-        response.put("user", registeredUser);
+        try {
+            UserDTO registeredUser = userService.registerUser(user);
 
-        return ResponseEntity.ok(response);
+            response.put("message", "User registered successfully");
+            response.put("user", registeredUser);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.put("message", "Registration failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<Map<String,Object>> login(@RequestBody LoginRequest loginRequest) {

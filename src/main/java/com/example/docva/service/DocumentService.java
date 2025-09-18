@@ -58,7 +58,9 @@ public class DocumentService {
                 .orElseGet(() -> {
                     Document newDocument = new Document();
                     newDocument.setFileName(fileName);
+                    newDocument.setFileLink(fileLink);
                     newDocument.setOwner(owner);
+                    newDocument.setCreatedAt(LocalDateTime.now());
                     return documentRepository.save(newDocument);
                 });
 
@@ -69,6 +71,7 @@ public class DocumentService {
         Version version = new Version();
         version.setVersionNo(latestVersion+1);
         version.setVersionLink(fileLink);
+        version.setUploadedAt(LocalDateTime.now());
 
         document.setFileLink(version.getVersionLink()); // set latest version link to document
 

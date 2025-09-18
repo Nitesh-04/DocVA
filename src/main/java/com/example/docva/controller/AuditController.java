@@ -4,6 +4,7 @@ import com.example.docva.dto.AuditDTO;
 import com.example.docva.model.LogType;
 import com.example.docva.service.AuditService;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +16,12 @@ public class AuditController {
         this.auditService = auditService;
     }
 
-    private final String username = "user1";
 
     @GetMapping("/all")
     public Page<AuditDTO> getAllLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return auditService.getUserLogs(page, size,username);
     }
 
@@ -45,6 +46,7 @@ public class AuditController {
             @PathVariable Long documentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return auditService.getLogsByUserOnDocument(page,size,username, documentId);
     }
 

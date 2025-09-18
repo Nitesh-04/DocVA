@@ -5,6 +5,7 @@ import com.example.docva.model.Version;
 import com.example.docva.service.VersionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +19,6 @@ public class VersionController {
     public VersionController(VersionService versionService) {
         this.versionService = versionService;
     }
-
-    private final String username = "user1";
 
     @GetMapping("/all")
     public List<VersionDTO> getAllVersions(
@@ -35,7 +34,7 @@ public class VersionController {
 
     @DeleteMapping("/{documentId}/{versionNo}")
     public ResponseEntity<String> deleteVersion(@PathVariable int versionNo, @PathVariable Long documentId) {
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Version> version = versionService.deleteVersion(username, versionNo, documentId);
 
         if(version.isPresent()) {

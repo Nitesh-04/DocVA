@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class Middleware extends OncePerRequestFilter {
@@ -27,6 +28,13 @@ public class Middleware extends OncePerRequestFilter {
                                     FilterChain filterChain)
         throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/auth") || path.startsWith("/actuator")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
         String token = null;
@@ -41,7 +49,7 @@ public class Middleware extends OncePerRequestFilter {
 
             if(jwtUtil.validateToken(token, username)) {
                 UsernamePasswordAuthenticationToken authToken =       // spring way of saving username, password, roles
-                        new UsernamePasswordAuthenticationToken(username, null);
+                        new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));   // stores IP etc. for audit and logs
 
